@@ -198,6 +198,6 @@
 ;; Local Variables:
 ;; coding: utf-8
 ;; no-byte-compile: t
-(desktop-save-mode 0)
+;; eval: (desktop-save-mode 0)
 ;; End:
 ;;; init.el ends here
