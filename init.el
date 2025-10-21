@@ -119,6 +119,7 @@
 (require 'init-rust)
 (require 'init-toml)
 (require 'init-yaml)
+(require 'init-shell)
 (require 'init-docker)
 (require 'init-terraform)
 (require 'init-nix)
@@ -158,7 +159,6 @@
 (when *is-a-mac*
   (require-package 'osx-location))
 (maybe-require-package 'dotenv-mode)
-(maybe-require-package 'shfmt)
 
 (when (maybe-require-package 'uptimes)
   (setq-default uptimes-keep-count 200)
