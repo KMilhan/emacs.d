@@ -55,6 +55,9 @@ To make the most of the programming language-specific support in this
 config, further programs will likely be required, particularly those
 that flycheck or flymake use to provide on-the-fly syntax checking.
 
+- Shell formatting relies on the `shfmt` executable — install it and ensure it
+  is on your `PATH` (see https://github.com/mvdan/sh).
+
 ## Installation
 
 To install, clone this repo to `~/.emacs.d`, i.e. ensure that the
