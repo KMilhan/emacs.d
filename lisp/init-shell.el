@@ -26,7 +26,7 @@
   (add-hook 'sh-mode-hook 'sanityinc/shfmt-enable)
   (with-eval-after-load 'sh-script
     (when (fboundp 'bash-ts-mode)
-      (add-hook 'bash-ts-mode-hook 'sanityinc/shfmt-enable)))))
+      (add-hook 'bash-ts-mode-hook 'sanityinc/shfmt-enable))))
 
 
 (provide 'init-shell)
