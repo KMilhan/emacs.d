@@ -31,12 +31,34 @@
 
 ;;; On-demand installation of packages
 
+(defvar sanityinc/package-refresh-interval (* 7 24 60 60)
+  "Minimum seconds between automatic package archive refreshes.")
+
+(defun sanityinc/package--archive-contents-stale-p (archive)
+  "Return non-nil when ARCHIVE contents are missing or too old."
+  (let ((contents-file (expand-file-name
+                        (format "archives/%s/archive-contents" (car archive))
+                        package-user-dir)))
+    (if (not (file-exists-p contents-file))
+        t
+      (> (- (float-time)
+            (float-time (file-attribute-modification-time
+                         (file-attributes contents-file))))
+         sanityinc/package-refresh-interval))))
+
+(defun sanityinc/package-refresh-contents-maybe ()
+  "Refresh package archives if the cached contents are stale."
+  (when (cl-some #'sanityinc/package--archive-contents-stale-p package-archives)
+    (package-refresh-contents)))
+
 (defun require-package (package &optional min-version no-refresh)
   "Install given PACKAGE, optionally requiring MIN-VERSION.
 If NO-REFRESH is non-nil, the available package lists will not be
 re-downloaded in order to locate PACKAGE."
   (when (stringp min-version)
     (setq min-version (version-to-list min-version)))
+  (unless package-archive-contents
+    (package-read-all-archive-contents))
   (or (package-installed-p package min-version)
       (let* ((known (cdr (assoc package package-archive-contents)))
              (best (car (sort known (lambda (a b)
@@ -46,7 +68,7 @@ re-downloaded in order to locate PACKAGE."
             (package-install best)
           (if no-refresh
               (error "No version of %s >= %S is available" package min-version)
-            (package-refresh-contents)
+            (sanityinc/package-refresh-contents-maybe)
             (require-package package min-version t)))
         (package-installed-p package min-version))))
 
