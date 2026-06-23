@@ -16,7 +16,7 @@
 
 
 (require-package 'whitespace-cleanup-mode)
-(add-hook 'after-init-hook 'global-whitespace-cleanup-mode)
+(sanityinc/add-idle-startup-hook 'global-whitespace-cleanup-mode 2 1)
 (with-eval-after-load 'whitespace-cleanup-mode
   (diminish 'whitespace-cleanup-mode))
 

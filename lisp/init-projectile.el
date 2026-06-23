@@ -3,7 +3,7 @@
 ;;; Code:
 
 (when (maybe-require-package 'projectile)
-  (add-hook 'after-init-hook 'projectile-mode)
+  (sanityinc/add-idle-startup-hook 'projectile-mode 2 1)
 
   ;; Shorter modeline
   (setq-default projectile-mode-line-prefix " Proj")

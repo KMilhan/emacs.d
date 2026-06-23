@@ -129,10 +129,19 @@ advice for `require-package', to which ARGS are passed."
 
 (when (fboundp 'package--save-selected-packages)
   (require-package 'seq)
-  (add-hook 'after-init-hook
-            (lambda ()
-              (package--save-selected-packages
-               (seq-uniq (append sanityinc/required-packages package-selected-packages))))))
+  (defun sanityinc/save-selected-packages-if-needed ()
+    "Save newly required packages to `package-selected-packages'."
+    (let ((missing (seq-filter
+                    (lambda (package)
+                      (not (memq package package-selected-packages)))
+                    sanityinc/required-packages)))
+      (when missing
+        (package--save-selected-packages
+         (seq-uniq (append missing package-selected-packages))))))
+  (if noninteractive
+      (add-hook 'after-init-hook 'sanityinc/save-selected-packages-if-needed)
+    (sanityinc/add-idle-startup-hook
+     'sanityinc/save-selected-packages-if-needed 5)))
 
 
 (let ((package-check-signature nil))

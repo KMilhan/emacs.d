@@ -5,7 +5,7 @@
 (when (maybe-require-package 'envrc)
   (with-eval-after-load 'envrc
     (define-key envrc-mode-map (kbd "C-c e") 'envrc-command-map))
-  (add-hook 'after-init-hook 'envrc-global-mode))
+  (sanityinc/add-idle-startup-hook 'envrc-global-mode 2 1))
 
 (provide 'init-direnv)
 
