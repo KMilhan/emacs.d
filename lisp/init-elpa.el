@@ -89,6 +89,8 @@ locate PACKAGE."
 
 (setq package-enable-at-startup nil)
 (setq package-native-compile t)
+(when (boundp 'native-comp-async-report-warnings-errors)
+  (setq native-comp-async-report-warnings-errors 'silent))
 (package-initialize)
 
 

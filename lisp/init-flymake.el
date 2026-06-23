@@ -38,8 +38,7 @@
                            'sanityinc/flymake-enable-in-buffer
                            (current-buffer))))
 
-  (add-hook 'prog-mode-hook 'sanityinc/flymake-maybe-enable)
-  (add-hook 'text-mode-hook 'sanityinc/flymake-maybe-enable))
+  (add-hook 'prog-mode-hook 'sanityinc/flymake-maybe-enable))
 
 (with-eval-after-load 'flymake
   ;; Provide some flycheck-like bindings in flymake mode to ease transition
