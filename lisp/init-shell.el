@@ -23,7 +23,7 @@
 
 (when (maybe-require-package 'reformatter)
   (reformatter-define shfmt-format
-    :program "shfmt"
+    :program (sanityinc/executable-find-or-user-error "shfmt")
     :args '("-i" "2" "-ci" "-bn")
     :lighter " ShFmt")
 

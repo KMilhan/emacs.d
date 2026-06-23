@@ -11,7 +11,8 @@
     ;; so I redefine `terraform-format-on-save-mode' here.
     (when (maybe-require-package 'reformatter)
       (reformatter-define terraform-format
-        :program "terraform" :args '("fmt" "-")))))
+        :program (sanityinc/executable-find-or-user-error "terraform")
+        :args '("fmt" "-")))))
 
 (provide 'init-terraform)
 ;;; init-terraform.el ends here

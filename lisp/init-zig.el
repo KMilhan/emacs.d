@@ -2,12 +2,13 @@
 ;;; Commentary:
 ;;; Code:
 
-(if (and (maybe-require-package 'zig-ts-mode)
-         (fboundp 'treesit-ready-p) (treesit-ready-p 'zig))
+(if (and (sanityinc/treesit-ready-p 'zig)
+         (maybe-require-package 'zig-ts-mode))
     (progn
       (add-to-list 'auto-mode-alist '("\\.\\(zig\\|zon\\)\\'" . zig-ts-mode))
       (with-eval-after-load 'eglot
-        (add-to-list 'eglot-server-programs '(zig-ts-mode . ("zls")))))
+        (when (executable-find "zls")
+          (add-to-list 'eglot-server-programs '(zig-ts-mode . ("zls"))))))
   (require-package 'zig-mode))
 
 

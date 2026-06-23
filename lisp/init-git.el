@@ -71,10 +71,14 @@
 (defvar git-svn--available-commands nil "Cached list of git svn subcommands")
 (defun git-svn--available-commands ()
   (or git-svn--available-commands
-      (setq git-svn--available-commands
-            (sanityinc/string-all-matches
-             "^  \\([a-z\\-]+\\) +"
-             (shell-command-to-string "git svn help") 1))))
+      (let ((help (with-temp-buffer
+                    (unless (zerop (call-process
+                                    (sanityinc/executable-find-or-user-error "git")
+                                    nil t nil "svn" "help"))
+                      (user-error "git svn is unavailable"))
+                    (buffer-string))))
+        (setq git-svn--available-commands
+              (sanityinc/string-all-matches "^  \\([a-z\\-]+\\) +" help 1)))))
 
 (autoload 'vc-git-root "vc-git")
 

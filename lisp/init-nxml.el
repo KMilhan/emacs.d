@@ -43,7 +43,11 @@ indentation rules."
   (unless (use-region-p)
     (setq beg (point-min)
           end (point-max)))
-  (shell-command-on-region beg end "tidy -xml -q -i" (current-buffer) t "*tidy-errors*" t))
+  (let ((tidy (sanityinc/executable-find-or-user-error "tidy")))
+    (shell-command-on-region
+     beg end
+     (mapconcat 'shell-quote-argument (list tidy "-xml" "-q" "-i") " ")
+     (current-buffer) t "*tidy-errors*" t)))
 
 
 (provide 'init-nxml)

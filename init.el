@@ -58,8 +58,6 @@
 
 ;; Load configs for specific features and modes
 (require-package 'diminish)
-(maybe-require-package 'scratch)
-(require-package 'command-log-mode)
 
 (require 'init-frame-hooks)
 (require 'init-xterm)
@@ -114,6 +112,7 @@
 (require 'init-rails)
 (require 'init-sql)
 (require 'init-ocaml)
+(require 'init-go)
 (require 'init-j)
 (require 'init-nim)
 (require 'init-rust)
@@ -123,14 +122,6 @@
 (require 'init-docker)
 (require 'init-terraform)
 (require 'init-nix)
-(maybe-require-package 'nginx-mode)
-(maybe-require-package 'just-mode)
-(when (maybe-require-package 'just-ts-mode)
-  ;; Undo overly-optimistic autoloading, so that things still work in
-  ;; Emacs 29 without treesitter
-  (sanityinc/remove-auto-mode  'just-ts-mode))
-(maybe-require-package 'justl)
-
 (require 'init-paredit)
 (require 'init-lisp)
 (require 'init-sly)
@@ -150,15 +141,6 @@
 (require 'init-uiua)
 (require 'init-zig)
 (require 'init-terminals)
-
-;; Extra packages which don't require any configuration
-
-(require-package 'sudo-edit)
-(maybe-require-package 'gnuplot)
-(require-package 'htmlize)
-(when *is-a-mac*
-  (require-package 'osx-location))
-(maybe-require-package 'dotenv-mode)
 
 (when (maybe-require-package 'uptimes)
   (setq-default uptimes-keep-count 200)

@@ -7,7 +7,7 @@
 (setq-default lua-indent-level 2)
 
 (reformatter-define lua-format
-  :program "lua-format"
+  :program (sanityinc/executable-find-or-user-error "lua-format")
   :args '("--indent-width=2" "--no-use-tab")
   :lighter "LuaFmt ")
 

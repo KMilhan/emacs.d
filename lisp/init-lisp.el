@@ -275,15 +275,5 @@ there is no current file, eval the current buffer."
 (with-eval-after-load 'ert
   (define-key ert-results-mode-map (kbd "g") 'ert-results-rerun-all-tests))
 
-
-(maybe-require-package 'cl-libify)
-
-
-(maybe-require-package 'flycheck-relint)
-
-
-
-(maybe-require-package 'cask-mode)
-
 (provide 'init-lisp)
 ;;; init-lisp.el ends here

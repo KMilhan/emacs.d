@@ -20,13 +20,13 @@
 
   (when (maybe-require-package 'reformatter)
     (reformatter-define hindent
-      :program "hindent"
+      :program (sanityinc/executable-find-or-user-error "hindent")
       :lighter " Hin")
 
     (defalias 'hindent-mode 'hindent-on-save-mode)
 
     (reformatter-define ormolu
-      :program "ormolu"
+      :program (sanityinc/executable-find-or-user-error "ormolu")
       :lighter " Orm"))
 
   (with-eval-after-load 'haskell-mode

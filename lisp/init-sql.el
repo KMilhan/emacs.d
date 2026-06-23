@@ -85,7 +85,9 @@ This command currently blocks the UI, sorry."
         (with-current-buffer (get-buffer-create "*sql-explain-json*")
           (setq buffer-read-only nil)
           (delete-region (point-min) (point-max))
-          (let ((retcode (apply 'call-process sql-postgres-program nil (list (current-buffer) err-file) nil args)))
+          (let ((retcode (apply 'call-process
+                                (sanityinc/executable-find-or-user-error sql-postgres-program)
+                                nil (list (current-buffer) err-file) nil args)))
             (if (zerop retcode)
                 (progn
                   (json-mode)

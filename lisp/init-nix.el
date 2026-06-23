@@ -2,7 +2,8 @@
 ;;; Commentary:
 ;;; Code:
 
-(if (maybe-require-package 'nix-ts-mode)
+(if (and (sanityinc/treesit-ready-p 'nix)
+         (maybe-require-package 'nix-ts-mode))
     ;; If the TS mode is installed, then the non-TS mode is not, so
     ;; nobody will have added an auto-mode-alist entry
     (add-to-list 'auto-mode-alist '("\\.nix\\'" . nix-ts-mode))

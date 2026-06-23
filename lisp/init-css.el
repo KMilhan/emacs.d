@@ -40,17 +40,7 @@
 
 ;;; SASS and SCSS
 (require-package 'sass-mode)
-(unless (fboundp 'scss-mode)
-  ;; Prefer the scss-mode built into Emacs
-  (require-package 'scss-mode))
 (setq-default scss-compile-at-save nil)
-
-
-
-;;; LESS
-(unless (fboundp 'less-css-mode)
-  ;; Prefer the scss-mode built into Emacs
-  (require-package 'less-css-mode))
 
 
 

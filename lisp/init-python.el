@@ -42,7 +42,9 @@
   (add-to-list 'auto-mode-alist '("\\(poetry\\|uv\\)\\.lock\\'" . toml-mode)))
 
 (when (maybe-require-package 'reformatter)
-  (reformatter-define black :program "black" :args '("-")))
+  (reformatter-define black
+    :program (sanityinc/executable-find-or-user-error "black")
+    :args '("-")))
 
 (with-eval-after-load 'project
   (add-to-list 'project-vc-extra-root-markers "pyproject.toml"))

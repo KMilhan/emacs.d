@@ -24,10 +24,14 @@
     (define-key tuareg-mode-map (kbd "C-c C-z") 'sanityinc/tuareg-repl-switch)
     (define-key tuareg-interactive-mode-map (kbd "C-c C-z") 'sanityinc/tuareg-repl-switch-back)))
 
-(when (and (fboundp 'treesit-available-p) (treesit-available-p))
-  (require-package 'ocaml-ts-mode)
-  (with-eval-after-load 'eglot
-    (add-to-list 'eglot-server-programs '(((ocaml-ts-mode :language-id "ocaml")) "ocamllsp"))))
+(if (and (fboundp 'treesit-available-p) (treesit-available-p)
+         (sanityinc/treesit-ready-p 'ocaml))
+    (progn
+      (require-package 'ocaml-ts-mode)
+      (with-eval-after-load 'eglot
+        (when (executable-find "ocamllsp")
+          (add-to-list 'eglot-server-programs '(((ocaml-ts-mode :language-id "ocaml")) "ocamllsp")))))
+  (sanityinc/remove-auto-mode 'ocaml-ts-mode))
 
 (when (maybe-require-package 'dune)
   (maybe-require-package 'dune-format))
@@ -38,7 +42,7 @@
     "Arguments for \"ocp-indent\" invocation.")
 
   (reformatter-define ocp-indent
-    :program "ocp-indent"
+    :program (sanityinc/executable-find-or-user-error "ocp-indent")
     :args ocp-indent-args
     :lighter " OCP"))
 

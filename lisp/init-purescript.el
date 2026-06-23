@@ -16,7 +16,8 @@
 
   (when (maybe-require-package 'reformatter)
     (reformatter-define purty
-      :program "purty" :lighter " purty"))
+      :program (sanityinc/executable-find-or-user-error "purty")
+      :lighter " purty"))
 
   (when (maybe-require-package 'psci)
     (add-hook 'purescript-mode-hook 'inferior-psci-mode))
