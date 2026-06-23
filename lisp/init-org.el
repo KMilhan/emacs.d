@@ -379,7 +379,6 @@ typical word processor."
       (python . t)
       (ruby . t)
       (screen . nil)
-      (sh . t) ;; obsolete
       (shell . t)
       (sql . t)
       (sqlite . t)))))

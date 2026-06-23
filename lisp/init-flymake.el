@@ -25,7 +25,7 @@
   (define-key flymake-mode-map (kbd "C-c ! c") 'flymake-start))
 
 (unless (version< emacs-version "28.1")
-  (setq eldoc-documentation-function 'eldoc-documentation-compose)
+  (setq eldoc-documentation-strategy 'eldoc-documentation-compose)
 
   (add-hook 'flymake-mode-hook
             (lambda ()
