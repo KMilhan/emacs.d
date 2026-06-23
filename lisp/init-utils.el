@@ -66,6 +66,34 @@ BUFFER and ALIST are as for `display-buffer-full-frame'."
 
 
 
+;; Runtime dependency checks
+
+(defun sanityinc/treesit-ready-p (language)
+  "Return non-nil when tree-sitter LANGUAGE can be used."
+  (and (fboundp 'treesit-ready-p)
+       (treesit-ready-p language t)))
+
+(defun sanityinc/executable-find-or-user-error (program)
+  "Return PROGRAM's executable path or raise a user-facing error."
+  (or (executable-find program)
+      (user-error "Install %s or add it to PATH" program)))
+
+
+
+;; Startup deferral
+
+(defvar sanityinc/default-idle-delay 1.0
+  "Default idle delay for work deferred until after startup.")
+
+(defun sanityinc/add-idle-startup-hook (function &optional delay &rest args)
+  "Run FUNCTION with ARGS once after startup and DELAY seconds of idle time."
+  (add-hook 'after-init-hook
+            (lambda ()
+              (apply 'run-with-idle-timer
+                     (or delay sanityinc/default-idle-delay) nil function args))))
+
+
+
 ;; Delete the current file
 
 (defun delete-this-file ()
