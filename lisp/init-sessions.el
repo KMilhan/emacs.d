@@ -30,16 +30,26 @@
 
 ;; Restore histories and registers after saving
 
+(require 'savehist)
+
 (setq-default history-length 1000)
+(setq savehist-additional-variables
+      '(compile-history
+        extended-command-history
+        grep-find-history
+        grep-history
+        magit-revision-history
+        org-clock-history
+        org-refile-history
+        org-tags-history
+        query-replace-history
+        read-expression-history
+        regexp-history
+        regexp-search-ring
+        search-ring
+        shell-command-history))
+(setq savehist-ignored-variables '(file-name-history))
 (add-hook 'after-init-hook 'savehist-mode)
-
-(require-package 'session)
-
-(setq session-save-file (locate-user-emacs-file ".session"))
-(setq session-name-disable-regexp "\\(?:\\`'/tmp\\|\\.git/[A-Z_]+\\'\\)")
-(setq session-save-file-coding-system 'utf-8)
-
-(add-hook 'after-init-hook 'session-initialize)
 
 ;; save a bunch of variables to the desktop file
 ;; for lists specify the len of the maximal saved data also
@@ -50,7 +60,6 @@
         (dired-regexp-history     . 20)
         (extended-command-history . 30)
         (face-name-history        . 20)
-        (file-name-history        . 100)
         (grep-find-history        . 30)
         (grep-history             . 30)
         (ivy-history              . 100)
