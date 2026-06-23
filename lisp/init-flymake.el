@@ -14,8 +14,32 @@
              '(emacs-lisp emacs-lisp-checkdoc emacs-lisp-package sh-shellcheck))))
 
   (add-hook 'flymake-mode-hook 'flymake-flycheck-auto)
-  (add-hook 'prog-mode-hook 'flymake-mode)
-  (add-hook 'text-mode-hook 'flymake-mode))
+
+  (defun sanityinc/flymake-enable-in-buffer (buffer)
+    "Enable Flymake in BUFFER if it is still a local file buffer."
+    (when (buffer-live-p buffer)
+      (with-current-buffer buffer
+        (when (and buffer-file-name
+                   (not (file-remote-p buffer-file-name))
+                   (not (bound-and-true-p flymake-mode)))
+          (let ((debug-on-error nil))
+            (condition-case err
+                (flymake-mode 1)
+              (error
+               (message "Not enabling Flymake in %s: %s"
+                        (buffer-name)
+                        (error-message-string err)))))))))
+
+  (defun sanityinc/flymake-maybe-enable ()
+    "Enable Flymake after startup settles in local file buffers."
+    (when (and buffer-file-name
+               (not (file-remote-p buffer-file-name)))
+      (run-with-idle-timer 0.5 nil
+                           'sanityinc/flymake-enable-in-buffer
+                           (current-buffer))))
+
+  (add-hook 'prog-mode-hook 'sanityinc/flymake-maybe-enable)
+  (add-hook 'text-mode-hook 'sanityinc/flymake-maybe-enable))
 
 (with-eval-after-load 'flymake
   ;; Provide some flycheck-like bindings in flymake mode to ease transition

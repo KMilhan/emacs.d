@@ -266,8 +266,32 @@ there is no current file, eval the current buffer."
   (add-hook 'emacs-lisp-mode-hook 'highlight-quoted-mode))
 
 
-(when (maybe-require-package 'package-lint-flymake)
-  (add-hook 'emacs-lisp-mode-hook #'package-lint-flymake-setup))
+(defun sanityinc/elisp-package-file-p ()
+  "Return non-nil when the current buffer looks like an Elisp package."
+  (and buffer-file-name
+       (save-excursion
+         (save-restriction
+           (widen)
+           (goto-char (point-min))
+           (re-search-forward "^;; Package-Requires:"
+                              (line-beginning-position 100) t)))))
+
+(defun sanityinc/package-lint-flymake-setup-in-buffer (buffer)
+  "Enable `package-lint-flymake' in BUFFER if it is still a package file."
+  (when (buffer-live-p buffer)
+    (with-current-buffer buffer
+      (when (and (sanityinc/elisp-package-file-p)
+                 (maybe-require-package 'package-lint-flymake))
+        (package-lint-flymake-setup)))))
+
+(defun sanityinc/package-lint-flymake-maybe-setup ()
+  "Enable `package-lint-flymake' later for real package files."
+  (when (sanityinc/elisp-package-file-p)
+    (run-with-idle-timer 0.5 nil
+                         'sanityinc/package-lint-flymake-setup-in-buffer
+                         (current-buffer))))
+
+(add-hook 'emacs-lisp-mode-hook #'sanityinc/package-lint-flymake-maybe-setup)
 
 
 
