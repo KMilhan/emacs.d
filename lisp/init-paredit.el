@@ -15,7 +15,7 @@
 (with-eval-after-load 'paredit
   (diminish 'paredit-mode " Par")
   ;; Suppress certain paredit keybindings to avoid clashes, including
-  ;; my global binding of M-?
+  ;; the global M-? binding for `xref-find-references'
   (dolist (binding '("RET" "C-<left>" "C-<right>" "C-M-<left>" "C-M-<right>" "M-s" "M-?"))
     (define-key paredit-mode-map (read-kbd-macro binding) nil))
   (define-key paredit-mode-map (kbd "M-<up>") 'paredit-splice-sexp-killing-backward))

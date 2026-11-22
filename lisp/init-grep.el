@@ -14,9 +14,8 @@
     (define-key grep-mode-map key 'wgrep-change-to-wgrep-mode)))
 
 
-(when (and (executable-find "rg")
-           (maybe-require-package 'rg))
-  (global-set-key (kbd "M-?") 'rg-project))
+(when (executable-find "rg")
+  (maybe-require-package 'rg))
 
 
 (provide 'init-grep)

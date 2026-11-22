@@ -37,7 +37,7 @@
       (consult-ripgrep dir initial))
     (sanityinc/no-consult-preview sanityinc/consult-ripgrep-at-point)
     (when (executable-find "rg")
-      (global-set-key (kbd "M-?") 'sanityinc/consult-ripgrep-at-point))
+      (global-set-key (kbd "M-s r") 'sanityinc/consult-ripgrep-at-point))
 
     (global-set-key [remap switch-to-buffer] 'consult-buffer)
     (global-set-key [remap switch-to-buffer-other-window] 'consult-buffer-other-window)
