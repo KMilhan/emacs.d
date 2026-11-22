@@ -128,6 +128,49 @@
   (add-to-list 'page-break-lines-modes 'browse-kill-ring-mode))
 
 
+;;; Delete instead of kill
+
+;; Line and word kills only delete text, so C-y and M-y keep yanking
+;; what C-w, M-w, or another program last copied.  Undo restores it.
+
+(defvar sanityinc/delete-only-commands
+  '(kill-line kill-visual-line kill-whole-line
+    kill-word backward-kill-word kill-sexp backward-kill-sexp
+    kill-sentence backward-kill-sentence
+    kill-paragraph backward-kill-paragraph
+    kill-back-to-indentation zap-to-char zap-up-to-char
+    org-kill-line
+    paredit-kill paredit-forward-kill-word paredit-backward-kill-word
+    puni-kill-line puni-backward-kill-line
+    puni-forward-kill-word puni-backward-kill-word)
+  "Commands that delete text without saving it to the kill ring.")
+
+(defun sanityinc/delete-without-kill (command &rest args)
+  "Run COMMAND with ARGS, discarding killed text when invoked as a command.
+Lisp callers outside `sanityinc/delete-only-commands' still kill normally."
+  (if (not (memq this-command sanityinc/delete-only-commands))
+      (apply command args)
+    (let ((entry-command this-command))
+      (prog1 (let ((kill-ring nil)
+                   (kill-ring-yank-pointer nil)
+                   (interprogram-cut-function nil)
+                   (interprogram-paste-function nil))
+               (apply command args))
+        ;; `kill-region' sets `this-command'.  Restore it so a following
+        ;; C-w or M-w starts a new kill instead of appending to the old one.
+        (setq this-command entry-command)))))
+
+(define-minor-mode sanityinc/delete-without-kill-mode
+  "Make line and word kill commands delete text without killing it."
+  :global t
+  (dolist (command sanityinc/delete-only-commands)
+    (if sanityinc/delete-without-kill-mode
+        (advice-add command :around #'sanityinc/delete-without-kill)
+      (advice-remove command #'sanityinc/delete-without-kill))))
+
+(add-hook 'after-init-hook 'sanityinc/delete-without-kill-mode)
+
+
 ;; Don't disable narrowing commands
 (put 'narrow-to-region 'disabled nil)
 (put 'narrow-to-page 'disabled nil)
