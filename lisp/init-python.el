@@ -20,7 +20,10 @@
   (defun sanityinc/flymake-ruff-maybe-enable ()
     (when (executable-find "ruff")
       (flymake-ruff-load)))
-  (add-hook 'python-mode-hook 'sanityinc/flymake-ruff-maybe-enable))
+  (add-hook 'python-mode-hook 'sanityinc/flymake-ruff-maybe-enable)
+  (add-hook 'python-ts-mode-hook 'sanityinc/flymake-ruff-maybe-enable)
+  ;; Eglot replaces Flymake backends, so add Ruff back in managed buffers.
+  (add-hook 'eglot-managed-mode-hook 'sanityinc/flymake-ruff-maybe-enable))
 
 (with-eval-after-load 'eglot
   ;; This addition of "ty" has been upstreamed as of Dec 2025, but not
@@ -35,6 +38,10 @@
                 ("pyrefly" "lsp")
                 "jedi-language-server" ("ruff" "server") "ruff-lsp")))
         eglot-server-programs))
+
+;; Eglot connects after direnv sets PATH, so project venv servers are found.
+(add-hook 'python-mode-hook 'eglot-ensure)
+(add-hook 'python-ts-mode-hook 'eglot-ensure)
 
 (maybe-require-package 'ruff-format)
 

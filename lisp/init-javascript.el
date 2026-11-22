@@ -67,6 +67,14 @@
 
 
 
+;;; TypeScript
+
+;; Eglot already maps these modes to typescript-language-server.
+(dolist (hook '(typescript-mode-hook typescript-ts-mode-hook tsx-ts-mode-hook))
+  (add-hook hook 'eglot-ensure))
+
+
+
 ;; Run and interact with an inferior JS via js-comint.el
 
 (when (maybe-require-package 'js-comint)
