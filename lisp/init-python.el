@@ -23,7 +23,12 @@
   (add-hook 'python-mode-hook 'sanityinc/flymake-ruff-maybe-enable)
   (add-hook 'python-ts-mode-hook 'sanityinc/flymake-ruff-maybe-enable)
   ;; Eglot replaces Flymake backends, so add Ruff back in managed buffers.
-  (add-hook 'eglot-managed-mode-hook 'sanityinc/flymake-ruff-maybe-enable))
+  (add-hook 'eglot-managed-mode-hook 'sanityinc/flymake-ruff-maybe-enable)
+  ;; flymake-flycheck would run Ruff a second time.
+  (with-eval-after-load 'flycheck
+    (setq-default flycheck-disabled-checkers
+                  (append (default-value 'flycheck-disabled-checkers)
+                          '(python-ruff)))))
 
 ;; Eglot connects after direnv sets PATH, so project venv servers are found.
 (add-hook 'python-mode-hook 'eglot-ensure)
