@@ -25,25 +25,16 @@
   ;; Eglot replaces Flymake backends, so add Ruff back in managed buffers.
   (add-hook 'eglot-managed-mode-hook 'sanityinc/flymake-ruff-maybe-enable))
 
-(with-eval-after-load 'eglot
-  ;; This addition of "ty" has been upstreamed as of Dec 2025, but not
-  ;; yet released in ELPA versions of eglot.
-  (push `((python-mode python-ts-mode)
-          . ,(eglot-alternatives
-              '(("ty" "server")
-                "pylsp"
-                "pyls"
-                ("basedpyright-langserver" "--stdio")
-                ("pyright-langserver" "--stdio")
-                ("pyrefly" "lsp")
-                "jedi-language-server" ("ruff" "server") "ruff-lsp")))
-        eglot-server-programs))
-
 ;; Eglot connects after direnv sets PATH, so project venv servers are found.
 (add-hook 'python-mode-hook 'eglot-ensure)
 (add-hook 'python-ts-mode-hook 'eglot-ensure)
 
 (maybe-require-package 'ruff-format)
+(defvar ruff-fix-command "ruff" "Ruff executable for `ruff-fix-on-save-mode'.")
+(reformatter-define ruff-fix
+  :program ruff-fix-command
+  :args (list "check" "--fix-only" "--stdin-filename" (or (buffer-file-name) input-file))
+  :lighter " RuffFix")
 
 (when (maybe-require-package 'toml-mode)
   (add-to-list 'auto-mode-alist '("\\(poetry\\|uv\\)\\.lock\\'" . toml-mode)))
